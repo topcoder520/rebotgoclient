@@ -1,0 +1,7 @@
+{
+  "name": "rebotgoclient",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}
