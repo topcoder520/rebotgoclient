@@ -61,6 +61,12 @@
             <ion-button @click="MouseMoveRightDown()" expand="full">右下移</ion-button>
           </ion-col>
         </ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="tip">灵敏度：</p>
+            <ion-range :ticks="true" @ionChange="onIonChange" :snaps="true" :min="10" :max="300"></ion-range>
+          </ion-col>
+        </ion-row>
       </ion-grid>
     </ion-content>
   </ion-page>
@@ -68,45 +74,52 @@
 
 <script>
 import { defineComponent, getCurrentInstance, ref } from 'vue';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonGrid, IonRow, IonButton } from '@ionic/vue';
+import { IonRange,IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonGrid, IonRow, IonButton } from '@ionic/vue';
 
 var timer = null;
 export default defineComponent({
   name: 'Tab1Page',
-  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonCol, IonGrid, IonRow, IonButton },
+  components: { IonRange,IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonCol, IonGrid, IonRow, IonButton },
   setup() {
     const { proxy } = getCurrentInstance();
     const http = proxy.$api;
     const leftToggleStatus = ref(0);
+    const msg = ref('');
+    const move = ref(10);
     return {
       http,
-      leftToggleStatus
+      leftToggleStatus,
+      msg,
+      move
     }
   },
   methods: {
+    onIonChange({ detail }) {
+        this.move = detail.value;
+      },
     MouseMoveRightDown() {
-      this.http.get('/mouse/move', { move: 10, angle: 45 }).then((res) => {
+      this.http.get('/mouse/move', { move: this.move, angle: 45 }).then((res) => {
         console.log(res);
       }).catch((err) => {
         console.log(err);
       });
     },
     MouseMoveDown() {
-      this.http.get('/mouse/down', { move: 10 }).then((res) => {
+      this.http.get('/mouse/move', { move: this.move, angle: 90}).then((res) => {
         console.log(res);
       }).catch((err) => {
         console.log(err);
       });
     },
     MouseMoveLeftDown() {
-      this.http.get('/mouse/move', { move: 10, angle: 135 }).then((res) => {
+      this.http.get('/mouse/move', { move: this.move, angle: 135 }).then((res) => {
         console.log(res);
       }).catch((err) => {
         console.log(err);
       });
     },
     MouseMoveRight() {
-      this.http.get('/mouse/right', { move: 10 }).then((res) => {
+      this.http.get('/mouse/right', { move: this.move }).then((res) => {
         console.log(res);
       }).catch((err) => {
         console.log(err);
@@ -114,12 +127,14 @@ export default defineComponent({
     },
     MouseLeftToggle() {
       if (this.leftToggleStatus == 0) {
+        this.leftToggleStatus = 1;
         this.http.get('/mouse/lefttoggle', {}).then((res) => {
           console.log(res);
         }).catch((err) => {
           console.log(err);
         });
       } else {
+        this.leftToggleStatus = 0;
         this.http.get('/mouse/lefttoggleup', {}).then((res) => {
           console.log(res);
         }).catch((err) => {
@@ -128,28 +143,30 @@ export default defineComponent({
       }
     },
     MouseMoveLeft() {
-      this.http.get('/mouse/left', { move: 10 }).then((res) => {
+      this.http.get('/mouse/left', { move: this.move }).then((res) => {
         console.log(res);
+        //this.msg = JSON.stringify(res);
       }).catch((err) => {
         console.log(err);
+        //alert(JSON.stringify(err));
       });
     },
     MouseMoveRightTop() {
-      this.http.get('/mouse/move', { move: 10, angle: 315 }).then((res) => {
+      this.http.get('/mouse/move', { move: this.move, angle: 315 }).then((res) => {
         console.log(res);
       }).catch((err) => {
         console.log(err);
       });
     },
     MouseMoveUp() {
-      this.http.get('/mouse/up', { move: 10 }).then((res) => {
+      this.http.get('/mouse/move', { move: this.move, angle: 270 }).then((res) => {
         console.log(res);
       }).catch((err) => {
         console.log(err);
       });
     },
     MouseMoveLefTop() {
-      this.http.get('/mouse/move', { move: 10, angle: 225 }).then((res) => {
+      this.http.get('/mouse/move', { move: this.move, angle: 225 }).then((res) => {
         console.log(res);
       }).catch((err) => {
         console.log(err);
@@ -163,7 +180,7 @@ export default defineComponent({
       });
     },
     MouseScrollMouseDown() {
-      this.http.get('/mouse/wheelscrolldown', { move: 10 }).then((res) => {
+      this.http.get('/mouse/wheelscrolldown', { move: this.move }).then((res) => {
         console.log(res);
       }).catch((err) => {
         console.log(err);
@@ -177,7 +194,7 @@ export default defineComponent({
       });
     },
     MouseScrollMouseUp() {
-      this.http.get('/mouse/wheelscrollup', { move: 10 }).then((res) => {
+      this.http.get('/mouse/wheelscrollup', { move: this.move }).then((res) => {
         console.log(res);
       }).catch((err) => {
         console.log(err);
@@ -194,7 +211,7 @@ export default defineComponent({
         }).catch((err) => {
           console.log(err);
         });
-      }, 500);   //大概时间300ms
+      }, 300);   //大概时间300ms
     },
     leftDoubleClick() {
       clearTimeout(timer);  //清除
@@ -221,4 +238,18 @@ ion-button {
   width: 100%;
   min-height: 80px;
 }
+
+ion-range {
+    --bar-background: #bde0fe;
+    --bar-background-active: #3880ff;
+    --bar-height: 8px;
+    --bar-border-radius: 8px;
+    --knob-background: #bde0fe;
+    --knob-size: 60px;
+    --pin-background: #ffafcc;
+    --pin-color: #fff;
+  }
+  .tip{
+    margin: 0px;
+  }
 </style>
