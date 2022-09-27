@@ -23,10 +23,14 @@ import '@ionic/vue/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
+import api from './apiconfig';
+
 const app = createApp(App)
   .use(IonicVue)
   .use(router);
-  
+
+app.config.globalProperties.$api = api;
+
 router.isReady().then(() => {
   app.mount('#app');
 });
