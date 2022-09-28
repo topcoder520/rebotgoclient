@@ -4,6 +4,8 @@ import router from './router';
 
 import { IonicVue } from '@ionic/vue';
 
+import store from './store'
+
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
 
@@ -27,7 +29,9 @@ import api from './apiconfig';
 
 const app = createApp(App)
   .use(IonicVue)
-  .use(router);
+  .use(store)
+  .use(router)
+  ;
 
 app.config.globalProperties.$api = api;
 
