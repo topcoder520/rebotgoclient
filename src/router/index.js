@@ -27,7 +27,11 @@ const routes = [
         component: () => import('@/views/Tab3Page.vue')
       }
     ]
-  }
+  },
+  {//服务器地址管理
+    path: '/service',
+    component: () => import('@/views/ServicePage.vue')
+  },
 ]
 
 const router = createRouter({

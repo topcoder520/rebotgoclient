@@ -23,6 +23,7 @@
     "cordova-sqlite-storage": "^6.0.0",
     "core-js": "^3.6.5",
     "ionicons": "^6.0.3",
+    "vant": "^3.6.3",
     "vue": "^3.2.21",
     "vue-router": "^4.0.12",
     "vuex": "^4.0.2"

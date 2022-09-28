@@ -25,6 +25,11 @@ import '@ionic/vue/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
+import {
+  Cell, CellGroup,ContactList 
+} from 'vant';
+import 'vant/lib/index.css';
+
 import api from './apiconfig';
 
 const app = createApp(App)
@@ -32,6 +37,12 @@ const app = createApp(App)
   .use(store)
   .use(router)
   ;
+//vant
+app.use(CellGroup)
+  .use(Cell)
+  .use(ContactList)
+  ;
+
 
 app.config.globalProperties.$api = api;
 

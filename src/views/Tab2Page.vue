@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Tab 2</ion-title>
+        <ion-title>键盘操作</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
