@@ -74,6 +74,7 @@
 
 <script>
 import { defineComponent, getCurrentInstance, ref } from 'vue';
+import { useStore } from 'vuex';
 import { IonRange,IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonGrid, IonRow, IonButton } from '@ionic/vue';
 
 var timer = null;
@@ -81,147 +82,159 @@ export default defineComponent({
   name: 'Tab1Page',
   components: { IonRange,IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonCol, IonGrid, IonRow, IonButton },
   setup() {
+    const store = useStore();
     const { proxy } = getCurrentInstance();
     const http = proxy.$api;
     const leftToggleStatus = ref(0);
-    const msg = ref('');
     const move = ref(10);
-    return {
-      http,
-      leftToggleStatus,
-      msg,
-      move
-    }
-  },
-  methods: {
-    onIonChange({ detail }) {
-        this.move = detail.value;
-      },
-    MouseMoveRightDown() {
-      this.http.get('/mouse/move', { move: this.move, angle: 45 }).then((res) => {
+
+    const onIonChange = ({ detail })=>{
+      move.value = detail.value;
+    };
+    const MouseMoveRightDown = ()=>{
+      http.get(store.getters.baseURL+'/mouse/move', { move: move.value, angle: 45 }).then((res) => {
         console.log(res);
       }).catch((err) => {
         console.log(err);
       });
-    },
-    MouseMoveDown() {
-      this.http.get('/mouse/move', { move: this.move, angle: 90}).then((res) => {
+    };
+    const MouseMoveDown = ()=> {
+      http.get(store.getters.baseURL+'/mouse/move', { move: move.value, angle: 90}).then((res) => {
         console.log(res);
       }).catch((err) => {
         console.log(err);
       });
-    },
-    MouseMoveLeftDown() {
-      this.http.get('/mouse/move', { move: this.move, angle: 135 }).then((res) => {
+    };
+    const MouseMoveLeftDown = ()=> {
+      http.get(store.getters.baseURL+'/mouse/move', { move: move.value, angle: 135 }).then((res) => {
         console.log(res);
       }).catch((err) => {
         console.log(err);
       });
-    },
-    MouseMoveRight() {
-      this.http.get('/mouse/right', { move: this.move }).then((res) => {
+    };
+    const MouseMoveRight = ()=> {
+      http.get(store.getters.baseURL+'/mouse/right', { move: move.value }).then((res) => {
         console.log(res);
       }).catch((err) => {
         console.log(err);
       });
-    },
-    MouseLeftToggle() {
-      if (this.leftToggleStatus == 0) {
-        this.leftToggleStatus = 1;
-        this.http.get('/mouse/lefttoggle', {}).then((res) => {
+    };
+    const MouseLeftToggle = ()=> {
+      if (leftToggleStatus.value == 0) {
+        leftToggleStatus.value = 1;
+        http.get(store.getters.baseURL+'/mouse/lefttoggle', {}).then((res) => {
           console.log(res);
         }).catch((err) => {
           console.log(err);
         });
       } else {
-        this.leftToggleStatus = 0;
-        this.http.get('/mouse/lefttoggleup', {}).then((res) => {
+        leftToggleStatus.value = 0;
+        http.get(store.getters.baseURL+'/mouse/lefttoggleup', {}).then((res) => {
           console.log(res);
         }).catch((err) => {
           console.log(err);
         });
       }
-    },
-    MouseMoveLeft() {
-      this.http.get('/mouse/left', { move: this.move }).then((res) => {
+    };
+    const MouseMoveLeft = ()=> {
+      http.get(store.getters.baseURL+'/mouse/left', { move: move.value }).then((res) => {
         console.log(res);
-        //this.msg = JSON.stringify(res);
+        //msg = JSON.stringify(res);
       }).catch((err) => {
         console.log(err);
         //alert(JSON.stringify(err));
       });
-    },
-    MouseMoveRightTop() {
-      this.http.get('/mouse/move', { move: this.move, angle: 315 }).then((res) => {
+    };
+    const MouseMoveRightTop = ()=> {
+      http.get(store.getters.baseURL+'/mouse/move', { move: move.value, angle: 315 }).then((res) => {
         console.log(res);
       }).catch((err) => {
         console.log(err);
       });
-    },
-    MouseMoveUp() {
-      this.http.get('/mouse/move', { move: this.move, angle: 270 }).then((res) => {
+    };
+    const MouseMoveUp = ()=> {
+      http.get(store.getters.baseURL+'/mouse/move', { move: move.value, angle: 270 }).then((res) => {
         console.log(res);
       }).catch((err) => {
         console.log(err);
       });
-    },
-    MouseMoveLefTop() {
-      this.http.get('/mouse/move', { move: this.move, angle: 225 }).then((res) => {
+    };
+    const MouseMoveLefTop = ()=> {
+      http.get(store.getters.baseURL+'/mouse/move', { move: move.value, angle: 225 }).then((res) => {
         console.log(res);
       }).catch((err) => {
         console.log(err);
       });
-    },
-    MouseRightClick() {
-      this.http.get('/mouse/rightclick', {}).then((res) => {
+    };
+    const MouseRightClick = ()=> {
+      http.get(store.getters.baseURL+'/mouse/rightclick', {}).then((res) => {
         console.log(res);
       }).catch((err) => {
         console.log(err);
       });
-    },
-    MouseScrollMouseDown() {
-      this.http.get('/mouse/wheelscrolldown', { move: this.move }).then((res) => {
+    };
+    const MouseScrollMouseDown = ()=> {
+      http.get(store.getters.baseURL+'/mouse/wheelscrolldown', { move: move.value }).then((res) => {
         console.log(res);
       }).catch((err) => {
         console.log(err);
       });
-    },
-    MouseCenterClick() {
-      this.http.get('/mouse/centerclick', {}).then((res) => {
+    };
+    const MouseCenterClick = ()=> {
+      http.get(store.getters.baseURL+'/mouse/centerclick', {}).then((res) => {
         console.log(res);
       }).catch((err) => {
         console.log(err);
       });
-    },
-    MouseScrollMouseUp() {
-      this.http.get('/mouse/wheelscrollup', { move: this.move }).then((res) => {
+    };
+    const MouseScrollMouseUp = ()=> {
+      http.get(store.getters.baseURL+'/mouse/wheelscrollup', { move: move.value }).then((res) => {
         console.log(res);
       }).catch((err) => {
         console.log(err);
       });
-    },
-    leftSingleClick() {
+    };
+    const leftSingleClick = ()=> {
       clearTimeout(timer);  //首先清除计时器
       timer = setTimeout(() => {
         if (!timer) {
           return;
         }
-        this.http.get('/mouse/leftclick', {}).then((res) => {
+        http.get(store.getters.baseURL+'/mouse/leftclick', {}).then((res) => {
           console.log(res);
         }).catch((err) => {
           console.log(err);
         });
       }, 300);   //大概时间300ms
-    },
-    leftDoubleClick() {
+    };
+    const leftDoubleClick = ()=> {
       clearTimeout(timer);  //清除
-      this.http.get('/mouse/leftdoubleclick', {}).then((res) => {
+      http.get(store.getters.baseURL+'/mouse/leftdoubleclick', {}).then((res) => {
         console.log(res);
       }).catch((err) => {
         console.log(err);
       });
     }
-  }
+
+    return {
+      onIonChange,
+      MouseMoveRightDown,
+      MouseMoveDown,
+      MouseMoveLeftDown,
+      MouseMoveRight,
+      MouseLeftToggle,
+      MouseMoveLeft,
+      MouseMoveRightTop,
+      MouseMoveUp,
+      MouseMoveLefTop,
+      MouseRightClick,
+      MouseScrollMouseDown,
+      MouseCenterClick,
+      MouseScrollMouseUp,
+      leftSingleClick,
+      leftDoubleClick,
+    }
+  },
 });
 </script>
 <style scoped>

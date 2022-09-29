@@ -1,9 +1,9 @@
 import {getNowDateString} from '@/util/date'
 
-export function getConfigList(context){
+export function getServiceList(context){
     return new Promise((resolve,reject)=>{
         context.state.database.transaction(tx => {
-            tx.executeSql(`select Id,ConfigName,ServerAddress,UserName,Password,Status,Token,CreateTime,IsShow,State from config where State = 1 order by Id desc`, [], (tx, res) => {
+            tx.executeSql(`select Id,ConfigName,ServerAddress,UserName,Password,Status,Token,CreateTime,IsShow,State from service where State = 1 order by Id desc`, [], (tx, res) => {
                 var rowData = [];
                 for (var x = 0; x < res.rows.length; x++) {
                     rowData.push(res.rows.item(x));
@@ -18,12 +18,12 @@ export function getConfigList(context){
     });
 }
 
-export function updateNote(context,{
+export function updateService(context,{
     Id,ConfigName,ServerAddress,IsShow
 }){
     return new Promise((resolve, reject) => {
         context.state.database.transaction(function (tx) {
-            var query = "update config set ConfigName=?,ServerAddress=?,IsShow=? where Id = ?";
+            var query = "update service set ConfigName=?,ServerAddress=?,IsShow=? where Id = ?";
             tx.executeSql(query, [ConfigName,ServerAddress,IsShow,Id], function (tx, res) {
                     //console.log("insertId: " + res.insertId + " -- probably 1");
                     //console.log("rowsAffected: " + res.rowsAffected + " -- should be 1");
@@ -41,10 +41,33 @@ export function updateNote(context,{
     });
 }
 
-export function delConfig(context,id){
+export function chosenService(context,{
+    Id,IsShow
+}){
+    return new Promise((resolve, reject) => {
+        context.state.database.transaction(function (tx) {
+            var query = "update service set IsShow=? where Id = ?";
+            tx.executeSql(query, [IsShow,Id], function (tx, res) {
+                    //console.log("insertId: " + res.insertId + " -- probably 1");
+                    //console.log("rowsAffected: " + res.rowsAffected + " -- should be 1");
+                    resolve({rowsAffected:res.rowsAffected});
+                },
+                function (tx, error) {
+                    console.log('UPDATE  error: ' + error.message);
+                    reject('UPDATE  error: ' + error.message);
+                });
+        }, function (error) {
+            console.log('transaction error: ' + error.message);
+        }, function () {
+            console.log('transaction ok');
+        });
+    });
+}
+
+export function delService(context,id){
     return new Promise((resolve, reject) =>{
         context.state.database.transaction(function (tx) {
-            var query = "update config set State = 0 WHERE id = ?";
+            var query = "update service set State = 0 WHERE id = ?";
             tx.executeSql(query, [id], function (tx, res) {
                     //console.log("removeId: " + res.insertId);
                     //console.log("rowsAffected: " + res.rowsAffected);
@@ -62,13 +85,13 @@ export function delConfig(context,id){
     });
 }
 
-export function addConfig(context,{
+export function addService(context,{
     ConfigName,ServerAddress,IsShow
 }){
     return new Promise((resolve, reject) => {
         context.state.database.transaction(function (tx) {
             const CreateTime = getNowDateString();
-            var query = "INSERT INTO config (ConfigName,ServerAddress,UserName,Password,Status,Token,CreateTime,IsShow,State) VALUES (?,?,?,?,?,?,?,?,?)";
+            var query = "INSERT INTO service (ConfigName,ServerAddress,UserName,Password,Status,Token,CreateTime,IsShow,State) VALUES (?,?,?,?,?,?,?,?,?)";
             tx.executeSql(query, [ConfigName,ServerAddress,'','','','',CreateTime,IsShow,1], function (tx, res) {
                     //console.log("insertId: " + res.insertId + " -- probably 1");
                     //console.log("rowsAffected: " + res.rowsAffected + " -- should be 1");
@@ -86,14 +109,14 @@ export function addConfig(context,{
     });
 }
 
-export function getConfigById(context, id) {
+export function getServiceById(context, id) {
     return new Promise((resolve, reject) => {
         context.state.database.transaction(tx => {
             var exsql = '';
             if(id == 0){
                 exsql = ' or IsShow = 1';
             }
-            tx.executeSql('select Id,ConfigName,ServerAddress,UserName,Password,Status,Token,CreateTime,IsShow,State from config where Id = ' + id+exsql, [], (tx, res) => {
+            tx.executeSql('select Id,ConfigName,ServerAddress,UserName,Password,Status,Token,CreateTime,IsShow,State from service where Id = ' + id+exsql, [], (tx, res) => {
                 var rowData = {};
                 for (var x = 0; x < res.rows.length; x++) {
                     rowData = res.rows.item(x);
@@ -118,7 +141,7 @@ export function startupDatabase(context) {
             context.commit('setDatabase', db);
             //创建数据表
             db.transaction(function (tx) {
-                tx.executeSql(`CREATE TABLE IF NOT EXISTS "config" (
+                tx.executeSql(`CREATE TABLE IF NOT EXISTS "service" (
                                     "Id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
                                     "ConfigName" TEXT,
                                     "ServerAddress" TEXT,

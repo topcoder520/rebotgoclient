@@ -32,6 +32,10 @@ const routes = [
     path: '/service',
     component: () => import('@/views/ServicePage.vue')
   },
+  {//服务器地址编辑
+    path: '/addservice',
+    component: () => import('@/views/AddServicePage.vue')
+  },
 ]
 
 const router = createRouter({

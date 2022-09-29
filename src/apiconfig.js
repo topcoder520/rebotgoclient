@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const config = {
     // baseURL: process.env.baseURL
-    baseURL: 'http://192.168.2.10:8080',
+    //baseURL: 'http://192.168.2.10:8080',
     timeout: 3000,
     headers: {
         'Content-Type': 'application/json',
@@ -20,7 +20,7 @@ api.post = function (url, params) {
         // console.log("****************************");
         axios({
             method: 'post',
-            url: config.baseURL + url,
+            url: url,
             params,
             headers: {
                 'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ api.get = function (url, params) {
         // console.log("****************************");
         axios({
             method: 'get',
-            url: config.baseURL + url,
+            url: url,
             params,
             headers: {
                 'Content-Type': 'application/json',
