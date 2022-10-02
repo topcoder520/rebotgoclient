@@ -15,9 +15,9 @@
         </ion-row>
         <ion-row>
           <ion-col size="12">
-            <div style="height:380px;width:100%;background:#efefef;margin-top:8px;" @touchstart="moveTouchStart"
+            <div class="mousehandler" @touchstart="moveTouchStart"
               @touchmove="moveTouchmove" @touchend="moveTouchEnd" @click="leftSingleClick" @dblclick="leftDoubleClick">
-
+            <label>手势区</label>
             </div>
           </ion-col>
         </ion-row>
@@ -275,5 +275,16 @@ ion-range {
 
 .tip {
   margin: 0px;
+}
+.mousehandler{
+  height: 380px;
+    width: 100%;
+    background: rgb(239, 239, 239);
+    margin-top: 8px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 380px;
+    color: #c1bbbb;
+    font-size: 38px;
 }
 </style>
