@@ -21,9 +21,9 @@ api.post = function (url, params) {
         axios({
             method: 'post',
             url: url,
-            params,
+            data:JSON.stringify(params),
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json; charset=UTF-8',
             },
         }).then(response => {
             if (response.status == 200) {
