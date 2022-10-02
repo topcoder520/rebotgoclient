@@ -2,7 +2,7 @@
 rebotgoapi的客户端
 
 ### Mouse
-<img src="./img/mouse.jpg">
+<img src="./img/mouse.jpg" width="200px">
 
 鼠标操作的模拟
 左右上下滑动
