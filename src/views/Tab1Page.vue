@@ -7,34 +7,27 @@
     </ion-header>
     <ion-content :fullscreen="true">
       <ion-grid>
-        <ion-row class="mouseclick">
-          <ion-col size="4">
-            <ion-button @click="MouseScrollMouseUp()" expand="full">上滚</ion-button>
-          </ion-col>
-          <ion-col size="4">
-            <ion-button @click="MouseCenterClick()" expand="full">滚轮</ion-button>
-          </ion-col>
-          <ion-col size="4">
-            <ion-button @click="MouseScrollMouseDown()" expand="full">下滚</ion-button>
+        <ion-row>
+          <ion-col>
+            <p class="tip">灵敏度：</p>
+            <ion-range :ticks="true" @ionChange="onIonChange" :snaps="true" :min="1" :max="100"></ion-range>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col size="12">
-            <div style="height:300px;width:100%;background:#efefef;margin-top:8px;" @touchstart="moveTouchStart"
+            <div style="height:380px;width:100%;background:#efefef;margin-top:8px;" @touchstart="moveTouchStart"
               @touchmove="moveTouchmove" @touchend="moveTouchEnd" @click="leftSingleClick" @dblclick="leftDoubleClick">
 
             </div>
           </ion-col>
         </ion-row>
         <ion-row class="mousemove">
-          <ion-col>
-            <ion-button @click="MouseLeftToggle()" expand="full">拖拽</ion-button>
+          <ion-col size="6">
+            <ion-button @touchstart="scrollTouchStart" @touchmove="scrollTouchMove" @touchend="scrollTouchEnd"
+              expand="full">滚轮</ion-button>
           </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <p class="tip">灵敏度：</p>
-            <ion-range :ticks="true" @ionChange="onIonChange" :snaps="true" :min="1" :max="100"></ion-range>
+          <ion-col size="6">
+            <ion-button @click="MouseLeftToggle()" expand="full">拖拽</ion-button>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -56,7 +49,34 @@ export default defineComponent({
     const { proxy } = getCurrentInstance();
     const http = proxy.$api;
     const leftToggleStatus = ref(0);
-    const move = ref(10);
+    const move = ref(1);
+
+    /////////////滑轮///////////////
+    const scrollStartPointX = ref(0);
+    const scrollStartPointY = ref(0);
+    const scrollTouchStart = (event) => {
+      console.log('scroll start', event);
+      scrollStartPointX.value = event.targetTouches[0].pageX;
+      scrollStartPointY.value = event.targetTouches[0].pageY;
+    }
+    const scrollTouchMove = (event) => {
+      // 只监听单指划动，多指划动不作响应
+      if (event.targetTouches.length > 1) {
+        return;
+      }
+    }
+    const scrollTouchEnd = (event) => {
+      console.log('scroll end', event);
+      var distanceX = event.changedTouches[0].pageX - scrollStartPointX.value;
+      if (distanceX > 0) {
+        MouseScrollMouseDown();
+      } else if (distanceX < 0) {
+        MouseScrollMouseUp();
+      } else {
+        MouseCenterClick();
+      }
+    }
+    ///////////////////////////
 
     //////////触屏////////////
     const touchStartPointX = ref(0);
@@ -220,6 +240,9 @@ export default defineComponent({
       moveTouchStart,
       moveTouchmove,
       moveTouchEnd,
+      scrollTouchStart,
+      scrollTouchMove,
+      scrollTouchEnd
     }
   },
 });
