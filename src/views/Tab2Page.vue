@@ -180,7 +180,7 @@ export default defineComponent({
       });
     };
     const clickdirect = (direct) => {
-      http.get("http://192.168.1.7:8080" + '/key/keytap', { key: direct }).then((res) => {
+      http.get(store.getters.baseURL + '/key/keytap', { key: direct }).then((res) => {
         console.log(res);
         if (res.status == 200 && res.data.code == 200) {
           if (res.data.data != "") {
