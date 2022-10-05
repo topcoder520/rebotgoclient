@@ -39,8 +39,8 @@
           <ion-col size="3">
             <ion-button @click="clickdirect('right')">
               <ion-icon :icon="arrowForwardOutline" />
-            </ion-button> 
-          </ion-col> 
+            </ion-button>
+          </ion-col>
         </ion-row>
         <ion-row>
           <ion-col size="3">
@@ -147,12 +147,13 @@
 <script>
 import { defineComponent, ref, getCurrentInstance } from 'vue';
 import { useStore } from 'vuex';
-import { arrowBackOutline,arrowForwardOutline,arrowDownOutline,arrowUpOutline,logoMicrosoft} from 'ionicons/icons';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonGrid, IonRow,IonButton,IonIcon } from '@ionic/vue';
+import { arrowBackOutline, arrowForwardOutline, arrowDownOutline, arrowUpOutline, logoMicrosoft } from 'ionicons/icons';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonGrid, IonRow, IonButton, IonIcon } from '@ionic/vue';
+import { Clipboard } from '@capacitor/clipboard';
 
 export default defineComponent({
   name: 'Tab2Page',
-  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonCol, IonGrid, IonRow,IonButton,IonIcon },
+  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonCol, IonGrid, IonRow, IonButton, IonIcon },
   setup() {
 
     const store = useStore();
@@ -173,12 +174,22 @@ export default defineComponent({
       content.value = '';
     };
     //方向
-    const clickdirect = (direct)=>{
-      http.get(store.getters.baseURL + '/key/keytap', { key: direct}).then((res) => {
-          console.log(res);
-        }).catch((err) => {
-          console.log(err);
-        });
+    const writeToClipboard = async (text) => {
+      await Clipboard.write({
+        string: text
+      });
+    };
+    const clickdirect = (direct) => {
+      http.get("http://192.168.1.7:8080" + '/key/keytap', { key: direct }).then((res) => {
+        console.log(res);
+        if (res.status == 200 && res.data.code == 200) {
+          if (res.data.data != "") {
+            writeToClipboard(res.data.data);
+          }
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
     };
 
     return {
@@ -195,7 +206,7 @@ export default defineComponent({
 });
 </script>
 <style>
-  ion-button{
-    width: 100%;
-  }
+ion-button {
+  width: 100%;
+}
 </style>
