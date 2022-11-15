@@ -2,35 +2,49 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>鼠标操作</ion-title>
+        <ion-title>操作</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
       <ion-grid>
-        <ion-row>
+        <!-- <ion-row>
           <ion-col>
             <p class="tip">灵敏度：</p>
             <ion-range :ticks="true" @ionChange="onIonChange" :snaps="true" :min="1" :max="100"></ion-range>
           </ion-col>
-        </ion-row>
+        </ion-row> -->
         <ion-row>
           <ion-col size="12">
-            <div class="mousehandler" @touchstart="moveTouchStart"
-              @touchmove="moveTouchmove" @touchend="moveTouchEnd" @click="leftSingleClick" @dblclick="leftDoubleClick">
-            <label>手势区</label>
+            <div class="mousehandler" @touchstart="moveTouchStart" @touchmove="moveTouchmove" @touchend="moveTouchEnd"
+              @click="leftSingleClick" @dblclick="leftDoubleClick">
+              <label>手势区</label>
             </div>
           </ion-col>
         </ion-row>
         <ion-row class="mousemove">
-          <ion-col size="6">
+          <ion-col size="8">
             <ion-button @touchstart="scrollTouchStart" @touchmove="scrollTouchMove" @touchend="scrollTouchEnd"
               expand="full">滚轮</ion-button>
           </ion-col>
+          <ion-col size="4">
+            <ion-button @click="MouseLeftToggle()" expand="full">左键按压</ion-button>
+          </ion-col>
+        </ion-row>
+        <ion-row>
           <ion-col size="6">
-            <ion-button @click="MouseLeftToggle()" expand="full">拖拽</ion-button>
+            <ion-button @click="showPopup" expand="full">快捷键</ion-button>
+          </ion-col>
+          <ion-col size="6">
+            <ion-button @click="showPopupContent()" expand="full">输入</ion-button>
           </ion-col>
         </ion-row>
       </ion-grid>
+      <van-popup v-model:show="isShowPopup" closeable position="bottom" :style="{ height: '65%' }">
+        <ShortCut />
+      </van-popup>
+      <van-popup v-model:show="isShowPopupContent" closeable position="bottom" :style="{ height: '65%' }">
+        <InputContent />
+      </van-popup>
     </ion-content>
   </ion-page>
 </template>
@@ -38,18 +52,39 @@
 <script>
 import { defineComponent, getCurrentInstance, ref } from 'vue';
 import { useStore } from 'vuex';
-import { IonRange, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonGrid, IonRow, IonButton } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCol, IonGrid, IonRow, IonButton } from '@ionic/vue';
+import { useBackButton } from '@ionic/vue';
+
+import ShortCut from '@/components/ShortCutContainer.vue';
+import InputContent from '@/components/InputContent.vue';
 
 var timer = null;
 export default defineComponent({
   name: 'Tab1Page',
-  components: { IonRange, IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonCol, IonGrid, IonRow, IonButton },
+  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonCol, IonGrid, IonRow, IonButton, ShortCut, InputContent },
   setup() {
     const store = useStore();
     const { proxy } = getCurrentInstance();
     const http = proxy.$api;
     const leftToggleStatus = ref(0);
     const move = ref(1);
+
+    //监听返回
+    useBackButton(1, () => {
+      isShowPopup.value = false;
+      isShowPopupContent.value = false;
+    });
+
+    //快捷键
+    const isShowPopup = ref(false);
+    const showPopup = () => {
+      isShowPopup.value = true;
+    };
+    //输入
+    const isShowPopupContent = ref(false);
+    const showPopupContent = () => {
+      isShowPopupContent.value = true;
+    };
 
     /////////////滑轮///////////////
     const scrollStartPointX = ref(0);
@@ -68,10 +103,18 @@ export default defineComponent({
     const scrollTouchEnd = (event) => {
       console.log('scroll end', event);
       var distanceX = event.changedTouches[0].pageX - scrollStartPointX.value;
+      var distance = Math.abs(distanceX);
+      if (distance <= 80) {
+        distance = 1;
+      } else if (distance <= 160) {
+        distance = 4;
+      } else {
+        distance = 8;
+      }
       if (distanceX > 0) {
-        MouseScrollMouseDown();
+        MouseScrollMouseDown(distance);
       } else if (distanceX < 0) {
-        MouseScrollMouseUp();
+        MouseScrollMouseUp(Math.abs(distance));
       } else {
         MouseCenterClick();
       }
@@ -181,8 +224,9 @@ export default defineComponent({
         console.log(err);
       });
     };
-    const MouseScrollMouseDown = () => {
-      http.get(store.getters.baseURL + '/mouse/wheelscrolldown', { move: move.value }).then((res) => {
+    const MouseScrollMouseDown = (moveDistance) => {
+      console.log('moveDistance:' + moveDistance);
+      http.get(store.getters.baseURL + '/mouse/wheelscrolldown', { move: moveDistance }).then((res) => {
         console.log(res);
       }).catch((err) => {
         console.log(err);
@@ -195,8 +239,9 @@ export default defineComponent({
         console.log(err);
       });
     };
-    const MouseScrollMouseUp = () => {
-      http.get(store.getters.baseURL + '/mouse/wheelscrollup', { move: move.value }).then((res) => {
+    const MouseScrollMouseUp = (moveDistance) => {
+      console.log('moveDistance:' + moveDistance);
+      http.get(store.getters.baseURL + '/mouse/wheelscrollup', { move: moveDistance }).then((res) => {
         console.log(res);
       }).catch((err) => {
         console.log(err);
@@ -242,7 +287,12 @@ export default defineComponent({
       moveTouchEnd,
       scrollTouchStart,
       scrollTouchMove,
-      scrollTouchEnd
+      scrollTouchEnd,
+
+      showPopup,
+      isShowPopup,
+      isShowPopupContent,
+      showPopupContent,
     }
   },
 });
@@ -259,7 +309,7 @@ ion-col {
 ion-button {
   margin: 0px;
   width: 100%;
-  min-height: 80px;
+  min-height: 60px;
 }
 
 ion-range {
@@ -276,15 +326,16 @@ ion-range {
 .tip {
   margin: 0px;
 }
-.mousehandler{
+
+.mousehandler {
   height: 380px;
-    width: 100%;
-    background: rgb(239, 239, 239);
-    margin-top: 8px;
-    text-align: center;
-    vertical-align: middle;
-    line-height: 380px;
-    color: #c1bbbb;
-    font-size: 38px;
+  width: 100%;
+  background: rgb(239, 239, 239);
+  margin-top: 8px;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 380px;
+  color: #c1bbbb;
+  font-size: 38px;
 }
 </style>

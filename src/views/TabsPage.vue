@@ -5,14 +5,14 @@
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="tab1" href="/tabs/tab1">
           <ion-icon :icon="handRightOutline" />
-          <ion-label>鼠标</ion-label>
+          <ion-label>操作</ion-label>
         </ion-tab-button>
-          
+<!--           
         <ion-tab-button tab="tab2" href="/tabs/tab2">
           <ion-icon :icon="keypadOutline" />
           <ion-label>键盘</ion-label>
         </ion-tab-button>
-        
+         -->
         <ion-tab-button tab="tab3" href="/tabs/tab3">
           <ion-icon :icon="settingsOutline" />
           <ion-label>设置</ion-label>

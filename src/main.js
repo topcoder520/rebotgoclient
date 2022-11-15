@@ -26,7 +26,7 @@ import '@ionic/vue/css/display.css';
 import './theme/variables.css';
 
 import {
-  Cell, CellGroup,ContactList,Form,Field,Button,Switch
+  Cell, CellGroup,ContactList,Form,Field,Button,Switch,Popup,
 } from 'vant';
 import 'vant/lib/index.css';
 
@@ -45,6 +45,7 @@ app.use(CellGroup)
   .use(Field)
   .use(Button)
   .use(Switch)
+  .use(Popup)
   ;
 
 

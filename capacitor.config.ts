@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
+  appId: 'com.github.robotgoclient',
   appName: '键鼠模拟器',
   webDir: 'dist',
   bundledWebRuntime: false
