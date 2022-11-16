@@ -7,12 +7,10 @@
           <ion-icon :icon="handRightOutline" />
           <ion-label>操作</ion-label>
         </ion-tab-button>
-<!--           
-        <ion-tab-button tab="tab2" href="/tabs/tab2">
+        <ion-tab-button tab="ScreenView" href="/tabs/ScreenView">
           <ion-icon :icon="keypadOutline" />
-          <ion-label>键盘</ion-label>
+          <ion-label>屏幕</ion-label>
         </ion-tab-button>
-         -->
         <ion-tab-button tab="tab3" href="/tabs/tab3">
           <ion-icon :icon="settingsOutline" />
           <ion-label>设置</ion-label>

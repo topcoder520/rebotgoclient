@@ -137,7 +137,7 @@ export function startupDatabase(context) {
         document.addEventListener('deviceready', () => {
             const db = (window.cordova.platformId === 'browser') ?
                 window.openDatabase('mouse_keyboard', '1.0', 'Data', 2 * 1024 * 1024) :
-                window.sqlitePlugin.openDatabase({ name: 'mouse_keyboard.db', location: 'default', androidDatabaseImplementation: 2 });
+                window.sqlitePlugin.openDatabase({ name: 'mouse_keyboard.db', location: 'default'});
             context.commit('setDatabase', db);
             //创建数据表
             db.transaction(function (tx) {

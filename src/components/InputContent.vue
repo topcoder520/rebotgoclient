@@ -11,45 +11,6 @@
           <ion-grid>
             <ion-row>
               <ion-col size="3">
-                <ion-button @click="clickdirect('left')">
-                  <ion-icon :icon="arrowBackOutline" />
-                </ion-button>
-              </ion-col>
-              <ion-col size="3">
-                <ion-button @click="clickdirect('right')">
-                  <ion-icon :icon="arrowForwardOutline" />
-                </ion-button>
-              </ion-col>
-              <ion-col size="3">
-                <ion-button @click="clickdirect('up')">
-                  <ion-icon :icon="arrowUpOutline" />
-                </ion-button>
-              </ion-col>
-              <ion-col size="3">
-                <ion-button @click="clickdirect('down')">
-                  <ion-icon :icon="arrowDownOutline" />
-                </ion-button>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col size="6">
-                <ion-button @click="KeyInputString" expand="full">Enter(传输)</ion-button>
-              </ion-col>
-              <ion-col size="6">
-                <ion-button @click="clickdirect('backspace')" expand="full">Backspace</ion-button>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col size="12">
-                <textarea rows="6" ref="textarea" style="width:100%;" v-model="content"></textarea>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-        </ion-slide>
-        <ion-slide>
-          <ion-grid>
-            <ion-row>
-              <ion-col size="3">
                 <ion-button @click="clickdirect('f2')">
                   F2
                 </ion-button>
@@ -147,6 +108,45 @@
             </ion-row>
           </ion-grid>
         </ion-slide>
+        <ion-slide>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="3">
+                <ion-button @click="clickdirect('left')">
+                  <ion-icon :icon="arrowBackOutline" />
+                </ion-button>
+              </ion-col>
+              <ion-col size="3">
+                <ion-button @click="clickdirect('right')">
+                  <ion-icon :icon="arrowForwardOutline" />
+                </ion-button>
+              </ion-col>
+              <ion-col size="3">
+                <ion-button @click="clickdirect('up')">
+                  <ion-icon :icon="arrowUpOutline" />
+                </ion-button>
+              </ion-col>
+              <ion-col size="3">
+                <ion-button @click="clickdirect('down')">
+                  <ion-icon :icon="arrowDownOutline" />
+                </ion-button>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="6">
+                <ion-button @click="KeyInputString" expand="full">Enter(传输)</ion-button>
+              </ion-col>
+              <ion-col size="6">
+                <ion-button @click="clickdirect('backspace')" expand="full">Backspace</ion-button>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="12">
+                <textarea rows="6" ref="textarea" style="width:100%;" v-model="content"></textarea>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-slide>
       </ion-slides>
     </ion-content>
   </ion-page>
@@ -175,7 +175,7 @@ export default defineComponent({
     const http = proxy.$api;
 
     const slideOpts = {
-      initialSlide: 0,
+      initialSlide: 1,
       speed: 400
     };
     setTimeout
