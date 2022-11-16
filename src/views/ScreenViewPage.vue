@@ -6,7 +6,9 @@
             </ion-toolbar>
         </ion-header>
         <ion-content :fullscreen="true">
-            <canvas id="screen" ref="screen" style="background-color: #CCCCCC;width: 390px;height: 844px;"></canvas>
+            <div style="padding:9px;" id="screenbox">
+                <canvas id="screen" ref="screen" style="background-color: #CCCCCC;width: 100%;height: 100%;"></canvas>
+            </div>
         </ion-content>
     </ion-page>
 </template>
@@ -53,15 +55,30 @@ export default defineComponent({
             //console.log(event.data);
             var img = new Image();
             img.src = "data:image/jpeg;base64," + event.data;
+            let dwidth = 300;
+            let dheight = dwidth*3/4;
             img.onload = function () {
-                context2D.value.rotate(90 * Math.PI / 180);
-                context2D.value.drawImage(img,0,0,img.width,img.height,0,-width.value+92,390,844)
+                context2D.value.beginPath();
+                context2D.value.rotate(Math.PI / 2);
+                context2D.value.drawImage(img,0,-300,dheight,dwidth);
+                context2D.value.closePath();
             }
         });
+        
+        const vheight = ref(height.value-120 + 'px');
+        const vwidth = ref(width.value-30 + 'px');
         return {
             imageScreen,
             screen,
+            vwidth,
+            vheight,
         };
     },
 });
 </script>
+<style>
+    #screenbox{
+        width: v-bind("vwidth");
+        height: v-bind("vheight");
+    }
+</style>
